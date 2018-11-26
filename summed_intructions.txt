@@ -1,0 +1,16 @@
+Parkinson desease as cronic ilness
+
+Server code (using threads for many patients):
+	Recieve info from patient.
+	Saves clinic history (ch) in file (txt format)
+	Save into physiologicall paramethers txt file (different from the previousu one)
+	Add date and time for each session (recording of paramethers)
+	A folder for each patient.
+
+Cient code: 
+	Send patient info to server 
+	Info to pass: symptons, signs, date class.
+	After saving ch, send at least 2 physiological parameters recorded from bitalino. 
+	Bitalino is directly connected with java, writing this signals to the server
+	Stop manually OR fixed amount of time.
+
