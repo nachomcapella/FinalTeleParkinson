@@ -3,6 +3,8 @@ package finalteleparkinson;
 //This one controls input and output communications.
 import java.net.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
@@ -34,7 +36,7 @@ public class IO {
         //First the day
         Date date = new Date();
         String title = "1";
-        String strDateFormat = "dd/MM/yy HH:mm:ss";
+        String strDateFormat = "dd-MM-yy-HH-mm-ss";
         DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
         String formattedDate = dateFormat.format(date);
 
@@ -74,32 +76,30 @@ public class IO {
     }
 
     public static void saveInfo(String info, String username) throws Exception {
-        String root = "D:/Documetos/Universidad 4/Telemedicina/proyect/savedExamples/"+ username + "/";
+        String root = "C:\\Users\\Nacho\\Desktop\\telemedicine\\"+ username;
         Scanner scanner = new Scanner(info);
         //Splits string finding specified caracter
         String splitted_info[] = info.split("\n");
         int info_number = Integer.parseInt(splitted_info[0]);
         String path = "";
         if (info_number == 1) {
-            //We now that date is at line 4
-            //Now we create the definitive path
-            //CREO QUE FALLA POR QUE HAY QUE CREAR LA CARPETA DE ROOT ANTES QUE NADA. No se como se hace! :( (lo último que he añadido antes de que fallara)
-            //POR OTRO LADO, puede que la fecha al tener barras genere problemas.
-            //El deubgger es muy útil para esta parte <3
-            path = root + info_number + "_" + splitted_info[3] + ".txt";
+            path = root + "\\" + "session" + "_" + splitted_info[3] + ".txt";
         } else {
             Date date = new Date();
-            String strDateFormat = "dd/MM/yy HH:mm:ss";
+            String strDateFormat = "dd-MM-yy-HH-mm-ss";
             DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
             String formattedDate = dateFormat.format(date);
             //This is how we save the biosignals that we recieve as strings
             //The format of our biosignals SAVED is a header , followed by the actual values of the signal.
-            path = root + info_number + "_" + formattedDate +".txt";
+            path = root + "\\" + "signal" + "_" + formattedDate +".txt";
         }
 
-        //This will create the folder of a person and its info file
+        //This will create the folder of a person, if it does not exist, and its info file.
+        if (new File(root).mkdirs()){
+            Files.createDirectories(Paths.get(root));
+        }
         File file = new File(path);
-
+        System.out.println(path);
         //Now we save info into specific .txt (except username which is info already in the folder name) in the path
         PrintWriter write_text = null;
         try {
