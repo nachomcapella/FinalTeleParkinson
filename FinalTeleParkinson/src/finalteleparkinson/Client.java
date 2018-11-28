@@ -13,8 +13,11 @@ public class Client {
         PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connection established... sending text");
 
-        //String clin_history = "1\nde\nfe\ndh";
-        String clin_history = IO.askInfoClient();
+        String[] credentials = IO.identifyClient();
+        if(credentials==null){
+            //kill
+        }
+        String clin_history = IO.askInfoClient(credentials);
         printWriter.println(clin_history);
 
         //After sending the clinic history time to record em signals.
