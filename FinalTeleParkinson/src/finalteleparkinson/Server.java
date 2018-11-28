@@ -15,7 +15,7 @@ public class Server {
                 //Thie executes when we have a client
                 Socket socket = serverSocket.accept();
                 System.out.println("New patient connected.");
-                new java.lang.Thread(new Thread(socket)).start();
+                new java.lang.Thread(new ServerThread(socket)).start();
             }
         } finally {
             //Can do this because the method itself is static

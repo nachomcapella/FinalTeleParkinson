@@ -145,11 +145,11 @@ public class IO {
 
     }
 
-    public static void releaseResourcesThread(ServerSocket serverSocket) {
+    public static void releaseResourcesServerThread(ServerSocket serverSocket) {
         try {
             serverSocket.close();
         } catch (IOException ex) {
-            Logger.getLogger(Thread.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -157,13 +157,13 @@ public class IO {
         try {
             inputStream.close();
         } catch (IOException ex) {
-            Logger.getLogger(Thread.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
             socket.close();
         } catch (IOException ex) {
-            Logger.getLogger(Thread.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -171,7 +171,7 @@ public class IO {
         try {
             serverSocket.close();
         } catch (IOException ex) {
-            Logger.getLogger(Thread.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
