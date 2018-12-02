@@ -24,13 +24,13 @@ public class BitalinoDemo {
             System.out.println(devices);
 
             //You need TO CHANGE THE MAC ADDRESS
-            String macAddress = "20:16:02:14:75:76";
+            String macAddress = "20:17:09:18:49:99";
             int SamplingRate = 10;
             bitalino.open(macAddress, SamplingRate);
 
             // start acquisition on analog channels A2 and A6
             //If you want A1, A3 and A4 you should use {0,2,3}
-            int[] channelsToAcquire = {1, 5};
+            int[] channelsToAcquire = {1,4};
             bitalino.start(channelsToAcquire);
 
             //read 10000 samples
