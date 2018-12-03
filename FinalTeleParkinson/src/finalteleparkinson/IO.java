@@ -64,7 +64,7 @@ public class IO {
                 break;
             }
         }
-        if(credentials!=null){
+        if (credentials != null) {
             System.out.println("Log in successful.");
         }
         return credentials;
@@ -96,7 +96,10 @@ public class IO {
             try {
                 write_text = new PrintWriter(file);
                 write_text.println(username);
-                write_text.println(password);
+                String key = "ezeon8547";
+                String encoded = Encryption.encrypt(key, password);
+                write_text.println(encoded);
+
                 System.out.println("Sign up succeeded. Please, log in.");
             } catch (Exception e) {
                 System.out.println("Something has gone wrong");
@@ -122,9 +125,9 @@ public class IO {
         String password = scanner.nextLine();
         try {
             boolean result = signInClient(username, password);
-            if (result){
-                credentials[0]=username;
-                credentials[1]=password;
+            if (result) {
+                credentials[0] = username;
+                credentials[1] = password;
             }
         } catch (Exception ex) {
             Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
@@ -137,7 +140,10 @@ public class IO {
         PrintWriter write_text = null;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String usernameSaved = br.readLine();
-            String passwordSaved = br.readLine();
+            String encoded = br.readLine();
+            String key = "ezeon8547";
+            String passwordSaved = Encryption.decrypt(key, encoded);
+
             if (username.matches(usernameSaved) && password.matches(passwordSaved)) {
                 return true;
             } else {
@@ -221,7 +227,7 @@ public class IO {
         }
 
     }
-    
+
     public static Frame[] readBitalinoSignal(int signalType) {
         Frame[] frame = null;
         BITalino bitalino = null;
@@ -255,10 +261,10 @@ public class IO {
                     System.out.println((j * 100 + i) + " seq: " + frame[i].seq + " "
                             + frame[i].analog[0] + " "
                             + frame[i].analog[1] + " "
-                      + frame[i].analog[2] + " "
-                      + frame[i].analog[3] + " "
-                      + frame[i].analog[4] + " "
-                      + frame[i].analog[5]
+                            + frame[i].analog[2] + " "
+                            + frame[i].analog[3] + " "
+                            + frame[i].analog[4] + " "
+                            + frame[i].analog[5]
                     );
 
                 }
@@ -280,14 +286,13 @@ public class IO {
             }
             return frame;
         }
-        
-        
 
     }
-    
+
     public static void saveBitalinoSignal(Frame[] frame, int signalType) {
-           for (int i = 0; i < frame.length; i++) {
-                    System.out.println(""+frame[i].analog[signalType]);
-    }}  
+        for (int i = 0; i < frame.length; i++) {
+            System.out.println("" + frame[i].analog[signalType]);
+        }
+    }
 
 }
