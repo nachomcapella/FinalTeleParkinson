@@ -153,6 +153,61 @@ public class IO {
 
     }
 
+    public static String[] identifyDoctor() {
+
+        Scanner scanner = new Scanner(System.in);
+        String[] credentials = null;
+        System.out.println("Welcome. Please, sign in. ");
+        credentials = knownDoctor();
+        if (credentials != null) {
+            System.out.println("Log in successful.");
+        }
+        return credentials;
+    }
+
+    public static String[] knownDoctor() {
+        Scanner scanner = new Scanner(System.in);
+        String[] credentials = new String[2];
+        System.out.println("Username: Doctor");
+        String username = "Doctor";
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+        try {
+            boolean result = signInClient(username, password);
+            if (result) {
+                credentials[0] = username;
+                credentials[1] = password;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return credentials;
+    }
+
+    public static void listFilesForFolder(File folder) {
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                listFilesForFolder(fileEntry);
+            } else {
+                System.out.println(fileEntry.getName());
+            }
+        }
+    }
+
+    public static void listFoldersForFolder(File folder) {
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                if (fileEntry.isDirectory()) {
+                    if ((fileEntry.getName().matches("Doctor")) != true) {
+                        System.out.println(fileEntry.getName());
+                    }
+                }
+            } else {
+                System.out.println(fileEntry.getName());
+            }
+        }
+    }
+
     public static void releaseResourcesServerThread(ServerSocket serverSocket) {
         try {
             serverSocket.close();
