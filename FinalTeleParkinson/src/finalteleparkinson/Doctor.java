@@ -38,8 +38,7 @@ public class Doctor {
         }
     }
 
-    public static boolean patientOptions(String name) {
-        System.out.println("Patient " + name + " chosen.");
+    public static boolean patientOptions(String name) throws IOException {
         System.out.println("\nWhat do you want to do?");
         System.out.println("View files (0)");
         System.out.println("Modify files (1)");
@@ -50,12 +49,17 @@ public class Doctor {
 
         String line = scanner.nextLine();
         int option = Integer.parseInt(line);
-        System.out.println("Option " + option + " chosen.");
         switch (option) {
             case 0: {
                 String path2 = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + name + "\\";
                 File folder2 = new File(path2);
                 IO.listFilesForFolder(folder2);
+                 System.out.println("\nWhat file do you want to view?");
+                System.out.print("Option: ");
+                String file = scanner.nextLine();
+                String path3 = path2 + file;
+                File fileToView = new File(path3);
+                IO.displayFile(fileToView);
                 return true;
             }
             case 1: {
@@ -65,8 +69,10 @@ public class Doctor {
                 System.out.println("\nWhat file do you want to modify?");
                 System.out.print("Option: ");
                 String file = scanner.nextLine();
-                String path3 = path2 + "file";
+                String path3 = path2 + file;
                 File fileToModify = new File(path3);
+                IO.displayFile(fileToModify);
+                IO.modifyFile(fileToModify);
                 return true;
             }
             case 2: {

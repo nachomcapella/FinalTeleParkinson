@@ -16,6 +16,33 @@ import javax.bluetooth.RemoteDevice;
 
 public class IO {
 
+    static void modifyFile(File fileToModify) throws IOException {
+        try {
+try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(fileToModify, true));
+            System.out.println("Please, add an annotation: ");
+            String newline = IO.consoleReadLine();
+            bw.append(newline);
+            bw.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        } catch (Exception ex) {
+        };
+    }
+
+    public static void displayFile(File file) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line = br.readLine();
+            while (line != null) {
+                         System.out.println(line);
+
+                line = br.readLine();
+            }
+        }
+
+    }
+
     public IO() {
     }
 
@@ -189,7 +216,8 @@ public class IO {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry);
             } else {
-                System.out.println(fileEntry.getName());
+                if(fileEntry.getName().matches("credentials.txt")!=true){
+                System.out.println(fileEntry.getName());}
             }
         }
     }
