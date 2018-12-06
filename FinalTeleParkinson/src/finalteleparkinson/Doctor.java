@@ -28,33 +28,71 @@ public class Doctor {
             IO.listFoldersForFolder(folder);
             System.out.print("Option: ");
             String name = scanner.nextLine();
-            System.out.println("Patient " + name + " chosen.");
-
-            System.out.println("\nWhat do you want to do?");
-            System.out.println("View files (0)");
-            System.out.println("Modify files (1)");
-            System.out.println("Delete files (2)");
-            System.out.print("Option: ");
-            String line = scanner.nextLine();
-            int option = Integer.parseInt(line);
-            System.out.println("Option " + option + " chosen.");
-            switch (option) {
-                case 0: {
-                    break;
-                }
-                case 1: {
-                    break;
-                }
-                case 2: {
-                    break;
-                }
-                case 3: {
+            while(true){
+                boolean finished = patientOptions(name);
+                if(finished==false){
                     break;
                 }
             }
 
         }
-
     }
 
+    public static boolean patientOptions(String name) {
+        System.out.println("Patient " + name + " chosen.");
+        System.out.println("\nWhat do you want to do?");
+        System.out.println("View files (0)");
+        System.out.println("Modify files (1)");
+        System.out.println("Delete files (2)");
+        System.out.println("Exit (3)");
+        System.out.print("Option: ");
+        Scanner scanner = new Scanner(System.in);
+
+        String line = scanner.nextLine();
+        int option = Integer.parseInt(line);
+        System.out.println("Option " + option + " chosen.");
+        switch (option) {
+            case 0: {
+                String path2 = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + name + "\\";
+                File folder2 = new File(path2);
+                IO.listFilesForFolder(folder2);
+                return true;
+            }
+            case 1: {
+                String path2 = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + name + "\\";
+                File folder2 = new File(path2);
+                IO.listFilesForFolder(folder2);
+                System.out.println("\nWhat file do you want to modify?");
+                System.out.print("Option: ");
+                String file = scanner.nextLine();
+                String path3 = path2 + "file";
+                File fileToModify = new File(path3);
+                return true;
+            }
+            case 2: {
+                String path2 = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + name + "\\";
+                File folder2 = new File(path2);
+                IO.listFilesForFolder(folder2);
+                System.out.println("\nWhat file do you want to delete?");
+                System.out.print("Option: ");
+                scanner = new Scanner(System.in);
+                String file = scanner.nextLine();
+                String path3 = path2 + file;
+                
+                File fileToDelete = new File(path3);
+                System.out.println(fileToDelete.isFile());
+                boolean result = fileToDelete.delete();
+                System.out.println("File deleted: " + result);
+                return true;
+            }
+            case 3: {
+                return false;
+
+            }
+
+        }
+        return false;
+
+    }
+    
 }
