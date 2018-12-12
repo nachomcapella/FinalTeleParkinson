@@ -1,4 +1,4 @@
-package finalteleparkinson;
+package client;
 
 import java.util.Vector;
 import javax.bluetooth.DeviceClass;
