@@ -1,4 +1,4 @@
-package finalteleparkinson;
+package client;
 
 //This one controls input and output communications.
 import java.net.*;
@@ -12,16 +12,16 @@ import java.util.logging.Logger;
 import java.util.Scanner;
 import java.util.Date;
 import java.util.Vector;
-import javax.bluetooth.RemoteDevice;
+//import javax.bluetooth.RemoteDevice;
 
-public class IO {
+public class IO_client {
 
     static void modifyFile(File fileToModify) throws IOException {
         try {
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(fileToModify, true));
                 System.out.println("Please, add an annotation: ");
-                String newline = IO.consoleReadLine();
+                String newline = IO_client.consoleReadLine();
                 bw.append(newline);
                 bw.close();
             } catch (IOException e) {
@@ -56,7 +56,7 @@ public class IO {
 
         String name = credentials[0];
         System.out.println("Symptoms and signs?");
-        String symptoms = IO.consoleReadLine();
+        String symptoms = IO_client.consoleReadLine();
 
         //Getting date
         //First the day
@@ -74,7 +74,7 @@ public class IO {
     public static String[] identifyClient() throws IOException {
         String[] credentials = null;
         System.out.print("Welcome. Please, sign up (1) or sign in (2): ");
-        String optionText = IO.consoleReadLine();
+        String optionText = IO_client.consoleReadLine();
         int option = Integer.parseInt(optionText);
         switch (option) {
             case 1: {
@@ -95,13 +95,13 @@ public class IO {
 
     public static void newClient() throws IOException {
         System.out.print("Please, select an username: ");
-        String username = IO.consoleReadLine();
+        String username = IO_client.consoleReadLine();
         System.out.print("Please, select a password: ");
-        String password = IO.consoleReadLine();
+        String password = IO_client.consoleReadLine();
         try {
             saveNewClient(username, password);
         } catch (Exception ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO_client.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -140,9 +140,9 @@ public class IO {
     public static String[] knownClient() throws IOException {
         String[] credentials = new String[2];
         System.out.print("Username: ");
-        String username = IO.consoleReadLine();
+        String username = IO_client.consoleReadLine();
         System.out.print("Password: ");
-        String password = IO.consoleReadLine();
+        String password = IO_client.consoleReadLine();
         try {
             boolean result = signInClient(username, password);
             if (result) {
@@ -150,7 +150,7 @@ public class IO {
                 credentials[1] = password;
             }
         } catch (Exception ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO_client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return credentials;
     }
@@ -187,7 +187,7 @@ public class IO {
         System.out.println("Username: Doctor");
         String username = "Doctor";
         System.out.print("Password: ");
-        String password = IO.consoleReadLine();
+        String password = IO_client.consoleReadLine();
         try {
             boolean result = signInClient(username, password);
             if (result) {
@@ -195,7 +195,7 @@ public class IO {
                 credentials[1] = password;
             }
         } catch (Exception ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO_client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return credentials;
     }
@@ -228,7 +228,7 @@ public class IO {
         try {
             socket.close();
         } catch (IOException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 
@@ -236,13 +236,13 @@ public class IO {
         try {
             printWriter.close();
         } catch (Exception ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
 
         try {
             socket.close();
         } catch (IOException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 
@@ -250,7 +250,7 @@ public class IO {
         try {
             serverSocket.close();
         } catch (IOException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 
@@ -258,19 +258,19 @@ public class IO {
         try {
             printWriter.close();
         } catch (Exception ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+           ex.printStackTrace();
         }
 
         try {
             outputStream.close();
         } catch (IOException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
 
         try {
             socket.close();
         } catch (IOException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 
@@ -333,10 +333,10 @@ public class IO {
             Vector<RemoteDevice> devices = bitalino.findDevices();
             System.out.println(devices);
 
-            //You need TO CHANGE THE MAC ADDRESS
-            String macAddress = "20:17:09:18:49:99";
+            System.out.println("Put the MAC adress of the Bitalino to use: ");
+            String mac_bitalino = IO_client.consoleReadLine();
             int SamplingRate = 10;
-            bitalino.open(macAddress, SamplingRate);
+            bitalino.open(mac_bitalino,SamplingRate);
 
             // start acquisition on analog channels A2 and A6
             //If you want A1, A3 and A4 you should use {0,2,3}
@@ -367,9 +367,7 @@ public class IO {
             //stop acquisition
             bitalino.stop();
         } catch (BITalinoException ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Throwable ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO_client.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 //close bluetooth connection
@@ -377,7 +375,7 @@ public class IO {
                     bitalino.close();
                 }
             } catch (BITalinoException ex) {
-                Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(IO_client.class.getName()).log(Level.SEVERE, null, ex);
             }
             return frame;
         }
