@@ -50,7 +50,7 @@ public class ServerThread implements Runnable {
                             }
                             //Now we have to save this in physicall memory
                             System.out.println(info);
-                            IO.saveInfo(info, username);
+                            IO_server.saveInfo(info, username);
                             break;
 
                         //Antes de hacer el caso 2 definimos los métodos que graben vitalino
@@ -61,14 +61,14 @@ public class ServerThread implements Runnable {
                             while (((single_read = bufferedReader.readLine()).equalsIgnoreCase("x")) == false) {
                                 biosignal = biosignal + "\n" + single_read;
                             }
-                            IO.saveInfo(biosignal, username);
+                            IO_server.saveInfo(biosignal, username);
                             break;
                     }
                 }
             }
         } catch (Exception e) {
         } finally {
-            IO.releaseResourcesServerThread(socket);
+            IO_server.releaseResourcesServerThread(socket);
         }
         
     }

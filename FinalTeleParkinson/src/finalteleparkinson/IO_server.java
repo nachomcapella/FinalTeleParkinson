@@ -14,14 +14,14 @@ import java.util.Date;
 import java.util.Vector;
 import javax.bluetooth.RemoteDevice;
 
-public class IO {
+public class IO_server {
 
     static void modifyFile(File fileToModify) throws IOException {
         try {
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(fileToModify, true));
                 System.out.println("Please, add an annotation: ");
-                String newline = IO.consoleReadLine();
+                String newline = IO_server.consoleReadLine();
                 bw.append(newline);
                 bw.close();
             } catch (IOException e) {
@@ -56,7 +56,7 @@ public class IO {
 
         String name = credentials[0];
         System.out.println("Symptoms and signs?");
-        String symptoms = IO.consoleReadLine();
+        String symptoms = IO_server.consoleReadLine();
 
         //Getting date
         //First the day
@@ -74,7 +74,7 @@ public class IO {
     public static String[] identifyClient() throws IOException {
         String[] credentials = null;
         System.out.print("Welcome. Please, sign up (1) or sign in (2): ");
-        String optionText = IO.consoleReadLine();
+        String optionText = IO_server.consoleReadLine();
         int option = Integer.parseInt(optionText);
         switch (option) {
             case 1: {
@@ -95,19 +95,19 @@ public class IO {
 
     public static void newClient() throws IOException {
         System.out.print("Please, select an username: ");
-        String username = IO.consoleReadLine();
+        String username = IO_server.consoleReadLine();
         System.out.print("Please, select a password: ");
-        String password = IO.consoleReadLine();
+        String password = IO_server.consoleReadLine();
         try {
             saveNewClient(username, password);
         } catch (Exception ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO_server.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
     public static void saveNewClient(String username, String password) throws Exception {
-        String root = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + username;
+        String root = "C:\\Users\\Ana\\Desktop\\" + username;
         if (new File(root).mkdirs()) {
             Files.createDirectories(Paths.get(root));
             String path = root + "\\credentials.txt";
@@ -140,9 +140,9 @@ public class IO {
     public static String[] knownClient() throws IOException {
         String[] credentials = new String[2];
         System.out.print("Username: ");
-        String username = IO.consoleReadLine();
+        String username = IO_server.consoleReadLine();
         System.out.print("Password: ");
-        String password = IO.consoleReadLine();
+        String password = IO_server.consoleReadLine();
         try {
             boolean result = signInClient(username, password);
             if (result) {
@@ -150,7 +150,7 @@ public class IO {
                 credentials[1] = password;
             }
         } catch (Exception ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO_server.class.getName()).log(Level.SEVERE, null, ex);
         }
         return credentials;
     }
@@ -187,7 +187,7 @@ public class IO {
         System.out.println("Username: Doctor");
         String username = "Doctor";
         System.out.print("Password: ");
-        String password = IO.consoleReadLine();
+        String password = IO_server.consoleReadLine();
         try {
             boolean result = signInClient(username, password);
             if (result) {
@@ -195,7 +195,7 @@ public class IO {
                 credentials[1] = password;
             }
         } catch (Exception ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO_server.class.getName()).log(Level.SEVERE, null, ex);
         }
         return credentials;
     }
@@ -322,7 +322,7 @@ public class IO {
         }
 
     }
-
+/*
     public static Frame[] readBitalinoSignal(int signalType) {
         Frame[] frame = null;
         BITalino bitalino = null;
@@ -367,9 +367,9 @@ public class IO {
             //stop acquisition
             bitalino.stop();
         } catch (BITalinoException ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO_server.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Throwable ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO_server.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 //close bluetooth connection
@@ -377,7 +377,7 @@ public class IO {
                     bitalino.close();
                 }
             } catch (BITalinoException ex) {
-                Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(IO_server.class.getName()).log(Level.SEVERE, null, ex);
             }
             return frame;
         }
@@ -389,5 +389,7 @@ public class IO {
             System.out.println("" + frame[i].analog[signalType]);
         }
     }
+    
+    */
 
 }
