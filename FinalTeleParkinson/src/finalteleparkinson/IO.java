@@ -18,47 +18,45 @@ public class IO {
 
     static void modifyFile(File fileToModify) throws IOException {
         try {
-try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(fileToModify, true));
-            System.out.println("Please, add an annotation: ");
-            String newline = IO.consoleReadLine();
-            bw.append(newline);
-            bw.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+            try {
+                BufferedWriter bw = new BufferedWriter(new FileWriter(fileToModify, true));
+                System.out.println("Please, add an annotation: ");
+                String newline = IO.consoleReadLine();
+                bw.append(newline);
+                bw.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         } catch (Exception ex) {
-        };
+        }
     }
 
     public static void displayFile(File file) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line = br.readLine();
             while (line != null) {
-                         System.out.println(line);
+                System.out.println(line);
 
                 line = br.readLine();
             }
+            br.close();
         }
 
-    }
-
-    public IO() {
     }
 
     public static String consoleReadLine() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String line = reader.readLine();
+        reader.close();
         return line;
     }
 
     //Will generate 3 \n lines of info for each client
-    public static String askInfoClient(String[] credentials) {
+    public static String askInfoClient(String[] credentials) throws IOException {
 
-        Scanner scanner = new Scanner(System.in);
         String name = credentials[0];
         System.out.println("Symptoms and signs?");
-        String symptoms = scanner.nextLine();
+        String symptoms = IO.consoleReadLine();
 
         //Getting date
         //First the day
@@ -73,12 +71,10 @@ try {
         return info;
     }
 
-    public static String[] identifyClient() {
-
-        Scanner scanner = new Scanner(System.in);
+    public static String[] identifyClient() throws IOException {
         String[] credentials = null;
         System.out.print("Welcome. Please, sign up (1) or sign in (2): ");
-        String optionText = scanner.nextLine();
+        String optionText = IO.consoleReadLine();
         int option = Integer.parseInt(optionText);
         switch (option) {
             case 1: {
@@ -97,13 +93,11 @@ try {
         return credentials;
     }
 
-    public static void newClient() {
-        Scanner scanner = new Scanner(System.in);
-
+    public static void newClient() throws IOException {
         System.out.print("Please, select an username: ");
-        String username = scanner.nextLine();
+        String username = IO.consoleReadLine();
         System.out.print("Please, select a password: ");
-        String password = scanner.nextLine();
+        String password = IO.consoleReadLine();
         try {
             saveNewClient(username, password);
         } catch (Exception ex) {
@@ -143,13 +137,12 @@ try {
 
     }
 
-    public static String[] knownClient() {
-        Scanner scanner = new Scanner(System.in);
+    public static String[] knownClient() throws IOException {
         String[] credentials = new String[2];
         System.out.print("Username: ");
-        String username = scanner.nextLine();
+        String username = IO.consoleReadLine();
         System.out.print("Password: ");
-        String password = scanner.nextLine();
+        String password = IO.consoleReadLine();
         try {
             boolean result = signInClient(username, password);
             if (result) {
@@ -164,13 +157,12 @@ try {
 
     public static boolean signInClient(String username, String password) throws Exception {
         String file = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + username + "\\credentials.txt";;
-        PrintWriter write_text = null;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String usernameSaved = br.readLine();
             String encoded = br.readLine();
             String key = "ezeon8547";
             String passwordSaved = Encryption.decrypt(key, encoded);
-
+            br.close();
             if (username.matches(usernameSaved) && password.matches(passwordSaved)) {
                 return true;
             } else {
@@ -180,9 +172,7 @@ try {
 
     }
 
-    public static String[] identifyDoctor() {
-
-        Scanner scanner = new Scanner(System.in);
+    public static String[] identifyDoctor() throws IOException {
         String[] credentials = null;
         System.out.println("Welcome. Please, sign in. ");
         credentials = knownDoctor();
@@ -192,13 +182,12 @@ try {
         return credentials;
     }
 
-    public static String[] knownDoctor() {
-        Scanner scanner = new Scanner(System.in);
+    public static String[] knownDoctor() throws IOException {
         String[] credentials = new String[2];
         System.out.println("Username: Doctor");
         String username = "Doctor";
         System.out.print("Password: ");
-        String password = scanner.nextLine();
+        String password = IO.consoleReadLine();
         try {
             boolean result = signInClient(username, password);
             if (result) {
@@ -215,9 +204,8 @@ try {
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry);
-            } else {
-                if(fileEntry.getName().matches("credentials.txt")!=true){
-                System.out.println(fileEntry.getName());}
+            } else if (fileEntry.getName().matches("credentials.txt") != true) {
+                System.out.println(fileEntry.getName());
             }
         }
     }
@@ -236,18 +224,18 @@ try {
         }
     }
 
-    public static void releaseResourcesServerThread(ServerSocket serverSocket) {
+    public static void releaseResourcesServerThread(Socket socket) {
         try {
-            serverSocket.close();
+            socket.close();
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void releaseResourcesClient(InputStream inputStream, Socket socket) {
+    public static void releaseResourcesClient(PrintWriter printWriter, Socket socket) {
         try {
-            inputStream.close();
-        } catch (IOException ex) {
+            printWriter.close();
+        } catch (Exception ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -261,6 +249,26 @@ try {
     public static void releaseResourcesServer(ServerSocket serverSocket) {
         try {
             serverSocket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    static void releaseResourcesDoctor(PrintWriter printWriter, OutputStream outputStream, Socket socket) {
+        try {
+            printWriter.close();
+        } catch (Exception ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            outputStream.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            socket.close();
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -307,6 +315,10 @@ try {
             if (write_text != null) {
                 write_text.close();
             }
+            if (scanner != null) {
+                scanner.close();
+            }
+
         }
 
     }

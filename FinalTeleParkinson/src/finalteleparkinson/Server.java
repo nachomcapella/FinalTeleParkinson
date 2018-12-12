@@ -22,5 +22,5 @@ public class Server {
             IO.releaseResourcesServer(serverSocket);
         }
     }
-    
+
 }

@@ -13,24 +13,27 @@ public class Doctor {
         OutputStream outputStream = socket.getOutputStream();
         PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Doctor's connexion.");
-        String[] credentials = IO.identifyDoctor();
-        if (credentials == null) {
-            //kill
-        }
+        String[] credentials = null;
+        while (credentials == null) {
+            credentials = IO.identifyDoctor();
+        };
 
         //String signal_example = "2\n2\n-4\n9\nx"; //LAS SEÑALES  devueltas por el metofo que quedan tienen en la primera linea lel tipo de dat, en la última una x y en tre medias los valores grabados
         //System.out.println(signal_example);
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\nPlease, select a patient:");
             String path = "C:\\Users\\Nacho\\Desktop\\telemedicine\\";
             File folder = new File(path);
             IO.listFoldersForFolder(folder);
-            System.out.print("Option: ");
-            String name = scanner.nextLine();
-            while(true){
+            System.out.print("Option («exit» to leave): ");
+            String name = IO.consoleReadLine();
+            if (name.matches("exit")) {
+                IO.releaseResourcesDoctor(printWriter, outputStream, socket);
+                System.exit(0);
+            }
+            while (true) {
                 boolean finished = patientOptions(name);
-                if(finished==false){
+                if (finished == false) {
                     break;
                 }
             }
@@ -45,18 +48,17 @@ public class Doctor {
         System.out.println("Delete files (2)");
         System.out.println("Exit (3)");
         System.out.print("Option: ");
-        Scanner scanner = new Scanner(System.in);
 
-        String line = scanner.nextLine();
+        String line = IO.consoleReadLine();
         int option = Integer.parseInt(line);
         switch (option) {
             case 0: {
                 String path2 = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + name + "\\";
                 File folder2 = new File(path2);
                 IO.listFilesForFolder(folder2);
-                 System.out.println("\nWhat file do you want to view?");
+                System.out.println("\nWhat file do you want to view?");
                 System.out.print("Option: ");
-                String file = scanner.nextLine();
+                String file = IO.consoleReadLine();
                 String path3 = path2 + file;
                 File fileToView = new File(path3);
                 IO.displayFile(fileToView);
@@ -68,7 +70,7 @@ public class Doctor {
                 IO.listFilesForFolder(folder2);
                 System.out.println("\nWhat file do you want to modify?");
                 System.out.print("Option: ");
-                String file = scanner.nextLine();
+                String file = IO.consoleReadLine();
                 String path3 = path2 + file;
                 File fileToModify = new File(path3);
                 IO.displayFile(fileToModify);
@@ -81,10 +83,9 @@ public class Doctor {
                 IO.listFilesForFolder(folder2);
                 System.out.println("\nWhat file do you want to delete?");
                 System.out.print("Option: ");
-                scanner = new Scanner(System.in);
-                String file = scanner.nextLine();
+                String file = IO.consoleReadLine();
                 String path3 = path2 + file;
-                
+
                 File fileToDelete = new File(path3);
                 System.out.println(fileToDelete.isFile());
                 boolean result = fileToDelete.delete();
@@ -100,5 +101,5 @@ public class Doctor {
         return false;
 
     }
-    
+
 }

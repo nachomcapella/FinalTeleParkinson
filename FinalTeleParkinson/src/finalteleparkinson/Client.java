@@ -7,16 +7,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Client {
-
+    
     public static void main(String[] args) throws IOException {
         Socket socket = new Socket("localhost", 9000);
-        OutputStream outputStream = socket.getOutputStream();
         PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connection established... sending text");
-
-        String[] credentials = IO.identifyClient();
-        if (credentials == null) {
-            //kill
+        
+        String[] credentials = null;
+        while (credentials == null) {
+            credentials = IO.identifyClient();
         }
         String clin_history = IO.askInfoClient(credentials);
         printWriter.println(clin_history);
@@ -27,7 +26,6 @@ public class Client {
 
         //String signal_example = "2\n2\n-4\n9\nx"; //LAS SEÑALES  devueltas por el metofo que quedan tienen en la primera linea lel tipo de dat, en la última una x y en tre medias los valores grabados
         //System.out.println(signal_example);
-        Scanner scanner = new Scanner(System.in);
         for (int i = 0;; i++) {
             if (i < 2) {
                 System.out.println("Which type of signal would you like to record?");
@@ -38,8 +36,8 @@ public class Client {
                 System.out.println("ACC (4)");
                 System.out.println("LUX (5)");
                 System.out.print("Option: ");
-                String line = scanner.nextLine();
-
+                String line = IO.consoleReadLine();
+                
                 int signalType = Integer.parseInt(line);
                 System.out.println("Option " + signalType + " chosen.");
                 System.out.println("Record of signal " + (i + 1) + " begins");
@@ -54,7 +52,7 @@ public class Client {
                 }
                 printWriter.println(signal);
             }
-
+            
             if (i >= 2) {
                 System.out.println("Do u want to record another one [Y]/[N]?");
                 String answer = IO.consoleReadLine();
@@ -70,8 +68,8 @@ public class Client {
                     System.out.println("ACC (4)");
                     System.out.println("LUX (5)");
                     System.out.print("Option: ");
-                    String line = scanner.nextLine();
-
+                    String line = IO.consoleReadLine();
+                    
                     int signalType = Integer.parseInt(line);
                     System.out.println("Option " + signalType + " chosen.");
                     Frame[] frame = IO.readBitalinoSignal(signalType);
@@ -91,8 +89,9 @@ public class Client {
                 }
             }
         }
+        IO.releaseResourcesClient(printWriter, socket);
         System.out.println("Process finished. Proceeding to disconnect.");
         System.out.println("Goodbye.");
     }
-
+    
 }
