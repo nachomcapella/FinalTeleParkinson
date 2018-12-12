@@ -367,9 +367,9 @@ public class IO {
             //stop acquisition
             bitalino.stop();
         } catch (BITalinoException ex) {
-            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Throwable ex) {
-            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 //close bluetooth connection
@@ -377,7 +377,7 @@ public class IO {
                     bitalino.close();
                 }
             } catch (BITalinoException ex) {
-                Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
             }
             return frame;
         }
