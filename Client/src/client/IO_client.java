@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import java.util.Scanner;
 import java.util.Date;
 import java.util.Vector;
-//import javax.bluetooth.RemoteDevice;
+import javax.bluetooth.RemoteDevice;
 
 public class IO_client {
 
