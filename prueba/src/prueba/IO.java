@@ -16,47 +16,22 @@ import javax.bluetooth.RemoteDevice;
 
 public class IO {
 
-    static void modifyFile(File fileToModify) throws IOException {
-        try {
-            try {
-                BufferedWriter bw = new BufferedWriter(new FileWriter(fileToModify, true));
-                System.out.println("Please, add an annotation: ");
-                String newline = IO.consoleReadLine();
-                bw.append(newline);
-                bw.close();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        } catch (Exception ex) {
-        }
-    }
-
-    public static void displayFile(File file) throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line = br.readLine();
-            while (line != null) {
-                System.out.println(line);
-
-                line = br.readLine();
-            }
-            br.close();
-        }
-
+    public IO() {
     }
 
     public static String consoleReadLine() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String line = reader.readLine();
-        reader.close();
         return line;
     }
 
     //Will generate 3 \n lines of info for each client
-    public static String askInfoClient(String[] credentials) throws IOException {
+    public static String askInfoClient(String[] credentials) {
 
+        Scanner scanner = new Scanner(System.in);
         String name = credentials[0];
         System.out.println("Symptoms and signs?");
-        String symptoms = IO.consoleReadLine();
+        String symptoms = scanner.nextLine();
 
         //Getting date
         //First the day
@@ -71,10 +46,12 @@ public class IO {
         return info;
     }
 
-    public static String[] identifyClient() throws IOException {
+    public static String[] identifyClient() {
+
+        Scanner scanner = new Scanner(System.in);
         String[] credentials = null;
         System.out.print("Welcome. Please, sign up (1) or sign in (2): ");
-        String optionText = IO.consoleReadLine();
+        String optionText = scanner.nextLine();
         int option = Integer.parseInt(optionText);
         switch (option) {
             case 1: {
@@ -93,16 +70,23 @@ public class IO {
         return credentials;
     }
 
-    public static void newClient() throws IOException {
-        System.out.print("Please, select an username: ");
-        String username = IO.consoleReadLine();
+    public static void newClient() {
+        Scanner scanner = new Scanner(System.in);
+        //we create or window to ask
+        Newclient nc = new Newclient();
+        nc.setVisible(true);
+        /*String username= nc.name;
+        String password= nc.password;*/
+        
+        /*System.out.print("Please, select an username: ");
+        String username = scanner.nextLine();
         System.out.print("Please, select a password: ");
-        String password = IO.consoleReadLine();
-        try {
+        String password = scanner.nextLine(); ^*/
+      /* try {
             saveNewClient(username, password);
         } catch (Exception ex) {
             Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
 
     }
 
@@ -137,12 +121,13 @@ public class IO {
 
     }
 
-    public static String[] knownClient() throws IOException {
+    public static String[] knownClient() {
+        Scanner scanner = new Scanner(System.in);
         String[] credentials = new String[2];
         System.out.print("Username: ");
-        String username = IO.consoleReadLine();
+        String username = scanner.nextLine();
         System.out.print("Password: ");
-        String password = IO.consoleReadLine();
+        String password = scanner.nextLine();
         try {
             boolean result = signInClient(username, password);
             if (result) {
@@ -157,12 +142,13 @@ public class IO {
 
     public static boolean signInClient(String username, String password) throws Exception {
         String file = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + username + "\\credentials.txt";;
+        PrintWriter write_text = null;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String usernameSaved = br.readLine();
             String encoded = br.readLine();
             String key = "ezeon8547";
             String passwordSaved = Encryption.decrypt(key, encoded);
-            br.close();
+
             if (username.matches(usernameSaved) && password.matches(passwordSaved)) {
                 return true;
             } else {
@@ -172,70 +158,18 @@ public class IO {
 
     }
 
-    public static String[] identifyDoctor() throws IOException {
-        String[] credentials = null;
-        System.out.println("Welcome. Please, sign in. ");
-        credentials = knownDoctor();
-        if (credentials != null) {
-            System.out.println("Log in successful.");
-        }
-        return credentials;
-    }
-
-    public static String[] knownDoctor() throws IOException {
-        String[] credentials = new String[2];
-        System.out.println("Username: Doctor");
-        String username = "Doctor";
-        System.out.print("Password: ");
-        String password = IO.consoleReadLine();
+    public static void releaseResourcesServerThread(ServerSocket serverSocket) {
         try {
-            boolean result = signInClient(username, password);
-            if (result) {
-                credentials[0] = username;
-                credentials[1] = password;
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return credentials;
-    }
-
-    public static void listFilesForFolder(File folder) {
-        for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                listFilesForFolder(fileEntry);
-            } else if (fileEntry.getName().matches("credentials.txt") != true) {
-                System.out.println(fileEntry.getName());
-            }
-        }
-    }
-
-    public static void listFoldersForFolder(File folder) {
-        for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                if (fileEntry.isDirectory()) {
-                    if ((fileEntry.getName().matches("Doctor")) != true) {
-                        System.out.println(fileEntry.getName());
-                    }
-                }
-            } else {
-                System.out.println(fileEntry.getName());
-            }
-        }
-    }
-
-    public static void releaseResourcesServerThread(Socket socket) {
-        try {
-            socket.close();
+            serverSocket.close();
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void releaseResourcesClient(PrintWriter printWriter, Socket socket) {
+    public static void releaseResourcesClient(InputStream inputStream, Socket socket) {
         try {
-            printWriter.close();
-        } catch (Exception ex) {
+            inputStream.close();
+        } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -249,26 +183,6 @@ public class IO {
     public static void releaseResourcesServer(ServerSocket serverSocket) {
         try {
             serverSocket.close();
-        } catch (IOException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    static void releaseResourcesDoctor(PrintWriter printWriter, OutputStream outputStream, Socket socket) {
-        try {
-            printWriter.close();
-        } catch (Exception ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            outputStream.close();
-        } catch (IOException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            socket.close();
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -315,10 +229,6 @@ public class IO {
             if (write_text != null) {
                 write_text.close();
             }
-            if (scanner != null) {
-                scanner.close();
-            }
-
         }
 
     }
@@ -367,9 +277,9 @@ public class IO {
             //stop acquisition
             bitalino.stop();
         } catch (BITalinoException ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Throwable ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 //close bluetooth connection
@@ -377,7 +287,7 @@ public class IO {
                     bitalino.close();
                 }
             } catch (BITalinoException ex) {
-                Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
             }
             return frame;
         }

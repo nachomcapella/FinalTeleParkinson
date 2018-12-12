@@ -13,7 +13,7 @@ public class Client {
         PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connection established... sending text");
         
-        String[] credentials = null;
+      /*  String[] credentials = null;
         while (credentials == null) {
             credentials = IO.identifyClient();
         }
@@ -92,6 +92,6 @@ public class Client {
         IO.releaseResourcesClient(printWriter, socket);
         System.out.println("Process finished. Proceeding to disconnect.");
         System.out.println("Goodbye.");
-    }
+    }*/
     
-}
+}}

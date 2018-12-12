@@ -1,14 +1,17 @@
 package finalteleparkinson;
 
-import java.net.*;
-import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+
 
 public class Server {
 
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(9000);
+       ServerSocket serverSocket = new ServerSocket(9000);
+       NewJFrameServer window1 = new NewJFrameServer();
+       window1.setVisible(true);
         System.out.println("Application started. Waiting for a patient...");
         try {
             while (true) {
@@ -22,5 +25,5 @@ public class Server {
             IO.releaseResourcesServer(serverSocket);
         }
     }
-
+    
 }

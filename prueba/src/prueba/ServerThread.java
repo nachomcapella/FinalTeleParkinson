@@ -5,11 +5,11 @@ import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Thread implements Runnable {
+public class ServerThread implements Runnable {
 
     Socket socket;
 
-    public Thread(Socket s2) {
+    public ServerThread(Socket s2) {
         socket = s2;
     }
 
