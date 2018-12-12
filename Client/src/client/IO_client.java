@@ -15,13 +15,16 @@ import java.util.Vector;
 import javax.bluetooth.RemoteDevice;
 
 public class IO_client {
+    
+    static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    static String user = ""; static String password = "";
 
     static void modifyFile(File fileToModify) throws IOException {
         try {
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(fileToModify, true));
                 System.out.println("Please, add an annotation: ");
-                String newline = IO_client.consoleReadLine();
+                String newline = reader.readLine();
                 bw.append(newline);
                 bw.close();
             } catch (IOException e) {
@@ -44,19 +47,12 @@ public class IO_client {
 
     }
 
-    public static String consoleReadLine() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String line = reader.readLine();
-        reader.close();
-        return line;
-    }
-
     //Will generate 3 \n lines of info for each client
     public static String askInfoClient(String[] credentials) throws IOException {
 
         String name = credentials[0];
         System.out.println("Symptoms and signs?");
-        String symptoms = IO_client.consoleReadLine();
+        String symptoms = reader.readLine();
 
         //Getting date
         //First the day
@@ -71,11 +67,12 @@ public class IO_client {
         return info;
     }
 
-    public static String[] identifyClient() throws IOException {
+    /*public static String[] identifyClient() throws IOException {
         String[] credentials = null;
         System.out.print("Welcome. Please, sign up (1) or sign in (2): ");
-        String optionText = IO_client.consoleReadLine();
+        String optionText = reader.readLine();
         int option = Integer.parseInt(optionText);
+        
         switch (option) {
             case 1: {
                 newClient();
@@ -92,21 +89,23 @@ public class IO_client {
         }
         return credentials;
     }
-
+*/
     public static void newClient() throws IOException {
         System.out.print("Please, select an username: ");
-        String username = IO_client.consoleReadLine();
+        user = reader.readLine();
         System.out.print("Please, select a password: ");
-        String password = IO_client.consoleReadLine();
-        try {
+        password = reader.readLine();
+        
+        /*try {
             saveNewClient(username, password);
         } catch (Exception ex) {
             Logger.getLogger(IO_client.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
 
     }
 
-    public static void saveNewClient(String username, String password) throws Exception {
+    /*public static void saveNewClient(String username, String password) throws Exception {
+        
         String root = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + username;
         if (new File(root).mkdirs()) {
             Files.createDirectories(Paths.get(root));
@@ -136,13 +135,13 @@ public class IO_client {
         }
 
     }
-
-    public static String[] knownClient() throws IOException {
+*/
+    /*public static String[] knownClient() throws IOException {
         String[] credentials = new String[2];
         System.out.print("Username: ");
-        String username = IO_client.consoleReadLine();
+        String username = reader.readLine();
         System.out.print("Password: ");
-        String password = IO_client.consoleReadLine();
+        String password = reader.readLine();
         try {
             boolean result = signInClient(username, password);
             if (result) {
@@ -154,7 +153,7 @@ public class IO_client {
         }
         return credentials;
     }
-
+*/
     public static boolean signInClient(String username, String password) throws Exception {
         String file = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + username + "\\credentials.txt";;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -172,33 +171,6 @@ public class IO_client {
 
     }
 
-    public static String[] identifyDoctor() throws IOException {
-        String[] credentials = null;
-        System.out.println("Welcome. Please, sign in. ");
-        credentials = knownDoctor();
-        if (credentials != null) {
-            System.out.println("Log in successful.");
-        }
-        return credentials;
-    }
-
-    public static String[] knownDoctor() throws IOException {
-        String[] credentials = new String[2];
-        System.out.println("Username: Doctor");
-        String username = "Doctor";
-        System.out.print("Password: ");
-        String password = IO_client.consoleReadLine();
-        try {
-            boolean result = signInClient(username, password);
-            if (result) {
-                credentials[0] = username;
-                credentials[1] = password;
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(IO_client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return credentials;
-    }
 
     public static void listFilesForFolder(File folder) {
         for (final File fileEntry : folder.listFiles()) {
@@ -227,52 +199,28 @@ public class IO_client {
     public static void releaseResourcesServerThread(Socket socket) {
         try {
             socket.close();
+            
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public static void releaseResourcesClient(PrintWriter printWriter, Socket socket) {
         try {
             printWriter.close();
+            reader.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
             socket.close();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void releaseResourcesServer(ServerSocket serverSocket) {
-        try {
-            serverSocket.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
 
-    static void releaseResourcesDoctor(PrintWriter printWriter, OutputStream outputStream, Socket socket) {
-        try {
-            printWriter.close();
-        } catch (Exception ex) {
-           ex.printStackTrace();
-        }
-
-        try {
-            outputStream.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        try {
-            socket.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     public static void saveInfo(String info, String username) throws Exception {
         String root = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + username;
@@ -323,7 +271,7 @@ public class IO_client {
 
     }
 
-    public static Frame[] readBitalinoSignal(int signalType) {
+    public static Frame[] readBitalinoSignal(int signalType,String mac_bitalino) {
         Frame[] frame = null;
         BITalino bitalino = null;
         try {
@@ -333,8 +281,7 @@ public class IO_client {
             Vector<RemoteDevice> devices = bitalino.findDevices();
             System.out.println(devices);
 
-            System.out.println("Put the MAC adress of the Bitalino to use: ");
-            String mac_bitalino = IO_client.consoleReadLine();
+            
             int SamplingRate = 10;
             bitalino.open(mac_bitalino,SamplingRate);
 

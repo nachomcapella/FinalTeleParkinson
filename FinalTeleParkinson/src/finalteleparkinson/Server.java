@@ -19,7 +19,7 @@ public class Server {
             }
         } finally {
             //Can do this because the method itself is static
-            IO.releaseResourcesServer(serverSocket);
+            IO_server.releaseResourcesServer(serverSocket);
         }
     }
 

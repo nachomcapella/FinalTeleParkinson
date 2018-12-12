@@ -1,6 +1,7 @@
 package client;
 
 
+import static client.IO_client.reader;
 import java.net.*;
 import java.io.*;
 import java.util.Scanner;
@@ -9,10 +10,12 @@ import java.util.logging.Logger;
 
 public class Client {
     
+    static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
     public static void main(String[] args) throws IOException {
         /*Manual insertion of data*/
         System.out.println("Put the IP of the server: ");
-        String ip_address = IO_client.consoleReadLine();
+        String ip_address = reader.readLine();
         
         
         /*This initializes the socket with the ip address*/
@@ -23,8 +26,35 @@ public class Client {
         
         String[] credentials = null;
         while (credentials == null) {
-            credentials = IO_client.identifyClient();
+            credentials = new String[2];
+        System.out.print("Welcome. Please, sign in : ");
+        //String optionText = reader.readLine();
+        //int option = Integer.parseInt(optionText);
+
+        //switch (option) {
+            //case 1: {
+                IO_client.newClient();
+                credentials[0] = IO_client.user;
+                credentials[1] = IO_client.password;
+               // try {
+               //        printWriter.println("Envia chequeo de nombre");
+               // } catch (Exception ex) {
+               //Logger.getLogger(IO_client.class.getName()).log(Level.SEVERE, null, ex);
+                
+               // break;
+           // }}
+            //case 2: {
+            //    IO_client.newClient();
+             //   credentials[0] = IO_client.user;
+            //    credentials[1] = IO_client.password;
+            //    break;
+           // }
+        //}
+        printWriter.println(credentials);
+        if (credentials != null) {
+            System.out.println("Log in successful.");
         }
+        }  
         String clin_history = IO_client.askInfoClient(credentials);
         printWriter.println(clin_history);
 
@@ -36,6 +66,8 @@ public class Client {
         /*Signals given will have in the first line dat type, in between data and the last one an X*/
 
         //System.out.println(signal_example);
+        System.out.println("Put the MAC adress of the Bitalino to use: ");
+        String mac_bitalino = reader.readLine();
         for (int i = 0;; i++) {
             if (i < 2) {
                 System.out.println("Which type of signal would you like to record?");
@@ -46,14 +78,15 @@ public class Client {
                 System.out.println("ACC (4)");
                 System.out.println("LUX (5)");
                 System.out.print("Option: ");
-                String line = IO_client.consoleReadLine();
+                String line = reader.readLine();
                 
                 int signalType = Integer.parseInt(line);
                 System.out.println("Option " + signalType + " chosen.");
                 System.out.println("Record of signal " + (i + 1) + " begins");
                 //String biosignal = IO.obtainBioSignal();
                 //printWriter.println(signal_example);
-                Frame[] frame = IO_client.readBitalinoSignal(signalType);
+                
+                Frame[] frame = IO_client.readBitalinoSignal(signalType, mac_bitalino);
                 String signal = "2\n";
                 for (int k = 0; k < 10; k++) {
                     for (Frame frame1 : frame) {
@@ -65,7 +98,7 @@ public class Client {
             
             if (i >= 2) {
                 System.out.println("Do you want to record another one [Y]/[N]?");
-                String answer = IO_client.consoleReadLine();
+                String answer = reader.readLine();
                 if (answer.equalsIgnoreCase("y")) {
                     //String biosignal = IO.obtainBioSignal();
                     //System.out.println("Record of " + (i+1) + "signal begins");
@@ -78,11 +111,11 @@ public class Client {
                     System.out.println("ACC (4)");
                     System.out.println("LUX (5)");
                     System.out.print("Option: ");
-                    String line = IO_client.consoleReadLine();
+                    String line = reader.readLine();
                     
                     int signalType = Integer.parseInt(line);
                     System.out.println("Option " + signalType + " chosen.");
-                    Frame[] frame = IO_client.readBitalinoSignal(signalType);
+                    Frame[] frame = IO_client.readBitalinoSignal(signalType, mac_bitalino);
                     String signal = "2\n";
                     for (int k = 0; k < 10; k++) {
                         for (Frame frame1 : frame) {
@@ -99,9 +132,12 @@ public class Client {
                 }
             }
         }
+        reader.close();
         IO_client.releaseResourcesClient(printWriter, socket);
         System.out.println("Process finished. Proceeding to disconnect.");
         System.out.println("Goodbye.");
     }
     
+ 
+
 }
