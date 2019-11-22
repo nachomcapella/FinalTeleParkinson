@@ -96,15 +96,15 @@ public class IO_client {
         System.out.print("Please, select a password: ");
         password = reader.readLine();
         
-        /*try {
-            saveNewClient(username, password);
+        try {
+            saveNewClient(user, password);
         } catch (Exception ex) {
             Logger.getLogger(IO_client.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
 
     }
 
-    /*public static void saveNewClient(String username, String password) throws Exception {
+    public static void saveNewClient(String username, String password) throws Exception {
         
         String root = "C:\\Users\\Nacho\\Desktop\\telemedicine\\" + username;
         if (new File(root).mkdirs()) {
@@ -135,7 +135,7 @@ public class IO_client {
         }
 
     }
-*/
+
     /*public static String[] knownClient() throws IOException {
         String[] credentials = new String[2];
         System.out.print("Username: ");
